@@ -1,16 +1,14 @@
 package kz.kamran.todoapplication.presentation.local
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
-import kz.kamran.todoapplication.R
 import kz.kamran.todoapplication.databinding.LocalFragmentBinding
 import kz.kamran.todoapplication.presentation.local.state.LocalTodoListState
 import kz.kamran.todoapplication.presentation.remote.todo_list_adapter.TodoListAdapter
@@ -71,10 +69,12 @@ class LocalFragment : Fragment() {
                 is LocalTodoListState.Loading -> startLoading()
                 is LocalTodoListState.Error -> {
                     stopLoading()
+                    binding.errorImageView.visibility = View.VISIBLE
                     showMessage(it.message)
                 }
                 is LocalTodoListState.Success -> {
                     stopLoading()
+                    binding.errorImageView.visibility = View.GONE
                     adapter.todoList = it.todoList.toMutableList()
                 }
                 else -> Unit
@@ -94,6 +94,9 @@ class LocalFragment : Fragment() {
                     todo = it
                 )
             )
+        }
+        adapter.onCompleteClick = {
+            viewModel.changeState(it)
         }
     }
 

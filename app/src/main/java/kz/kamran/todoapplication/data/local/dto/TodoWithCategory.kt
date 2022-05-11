@@ -12,5 +12,5 @@ data class TodoWithCategory(
         entityColumn = "id",
         entity = CategoryEntity::class
     )
-    val categoryEntity: CategoryEntity
+    val categoryEntity: CategoryEntity?
 )

@@ -6,7 +6,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import kz.kamran.todo_application.data.local.TodoDatabase
+import kz.kamran.todoapplication.data.local.TodoDatabase
 import javax.inject.Singleton
 
 @Module

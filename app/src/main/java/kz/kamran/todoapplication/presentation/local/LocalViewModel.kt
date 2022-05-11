@@ -7,14 +7,15 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import kz.kamran.todoapplication.data.local.entity.todo.TodoDao
-import kz.kamran.todoapplication.data.local.mapper.toTodo
+import kz.kamran.todoapplication.data.local.LocalRepository
+import kz.kamran.todoapplication.data.model.Todo
+import kz.kamran.todoapplication.data.remote.mapper.toReversedTodo
 import kz.kamran.todoapplication.presentation.local.state.LocalTodoListState
 import javax.inject.Inject
 
 @HiltViewModel
 class LocalViewModel @Inject constructor(
-    private val todoDao: TodoDao
+    private val localRepository: LocalRepository
 ) : ViewModel() {
 
     private var job = Job()
@@ -31,10 +32,17 @@ class LocalViewModel @Inject constructor(
     fun getLocalTodoList() {
         _todoListState.postValue(LocalTodoListState.Loading)
         viewModelScope.launch(job) {
-            val todoList = todoDao.getAll().map { it.toTodo() }
+            val todoList = localRepository.getTodoList()
             _todoListState.postValue(LocalTodoListState.Success(todoList))
         }
     }
 
+    fun changeState(todo: Todo) {
+        _todoListState.postValue(LocalTodoListState.Loading)
+        viewModelScope.launch(job) {
+            localRepository.saveTodo(todo.toReversedTodo())
+            getLocalTodoList()
+        }
+    }
     fun cancel() = job.cancel()
 }

@@ -12,7 +12,7 @@ fun TodoWithCategory.toTodo() =
         title = todoEntity.title,
         description = todoEntity.description,
         isCompleted = todoEntity.isCompleted,
-        category = categoryEntity.toCategory(),
+        category = categoryEntity?.toCategory() ?: Category(title = "123123"),
         deadline = todoEntity.deadline
     )
 
@@ -28,6 +28,15 @@ fun Todo.toTodoEntity() =
         description = description,
         isCompleted = isCompleted,
         categoryId = category.id,
+        deadline = deadline
+    )
+
+fun Todo.toTodoEntity(categoryId: Int) =
+    TodoEntity(
+        title = title,
+        description = description,
+        isCompleted = isCompleted,
+        categoryId = categoryId,
         deadline = deadline
     )
 

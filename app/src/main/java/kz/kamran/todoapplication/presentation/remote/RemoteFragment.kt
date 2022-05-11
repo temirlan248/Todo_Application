@@ -88,6 +88,13 @@ class RemoteFragment : Fragment() {
             adapter.onCompleteClick = {
                 viewModel.changeState(it)
             }
+            adapter.onItemClick = {
+                findNavController().navigate(
+                    RemoteFragmentDirections.actionRemoteFragmentToTodoFragment2(
+                        todo = it
+                    )
+                )
+            }
         }
     }
 
@@ -97,6 +104,11 @@ class RemoteFragment : Fragment() {
                 findNavController().navigate(
                     RemoteFragmentDirections.actionRemoteFragmentToTodoFragment2()
                 )
+            }
+
+            logoutButton.setOnClickListener{
+                viewModel.logout()
+                findNavController().navigateUp()
             }
         }
     }

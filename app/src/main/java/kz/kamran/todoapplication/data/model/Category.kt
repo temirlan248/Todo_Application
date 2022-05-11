@@ -5,6 +5,6 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Category(
-    val id: Int,
+    val id: Int = 0,
     val title: String,
 ) : Parcelable

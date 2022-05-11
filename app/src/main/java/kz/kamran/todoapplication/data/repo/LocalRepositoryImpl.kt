@@ -17,33 +17,24 @@ class LocalRepositoryImpl @Inject constructor(
 ) : LocalRepository {
     override suspend fun getCategoryList(): List<Category> {
         val fetchedCategoryList = categoryDao.getAll()
-        val categoryList = fetchedCategoryList.map { it.toCategory() }
-        return categoryList
+        return fetchedCategoryList.map { it.toCategory() }
     }
 
     override suspend fun getTodoList(): List<Todo> {
         val fetchedTodoList = todoDao.getAll()
-        val todoList = fetchedTodoList.map { it.toTodo() }
-        return todoList
+        return fetchedTodoList.map { it.toTodo() }
     }
 
     override suspend fun saveTodo(todo: Todo): Boolean {
         try {
-            val category = categoryDao.getById(todo.id)
-            if (category == null) {
+            val categoryEntity = categoryDao.getById(todo.category.id)
+            if (categoryEntity == null) {
                 val category = todo.category
                 categoryDao.insert(category.toCategoryEntity())
             }
-            todoDao.insert(todo.toTodoEntity())
-        } catch (e: Exception) {
-            return false
-        }
-        return true
-    }
-
-    override suspend fun saveCategory(category: Category): Boolean {
-        try {
-            categoryDao.insert(category.toCategoryEntity())
+            val categoryId = categoryDao.getAll()
+                .find { it.title.equals(todo.category.title, ignoreCase = true) }!!.id
+            todoDao.insert(todo.toTodoEntity(categoryId))
         } catch (e: Exception) {
             return false
         }

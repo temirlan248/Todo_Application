@@ -6,17 +6,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kz.kamran.todoapplication.data.remote.api.AuthApi
+import kz.kamran.todoapplication.data.remote.RemoteRepository
 import kz.kamran.todoapplication.data.remote.dto.LoginRequestDto
-import kz.kamran.todoapplication.data.remote.provider.UserProvider
 import kz.kamran.todoapplication.presentation.login.state.LoginState
+import java.lang.Error
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val authApi: AuthApi,
-    private val userProvider: UserProvider
+    private val remoteRepository: RemoteRepository,
 ) : ViewModel() {
 
     private val _loginState = MutableLiveData<LoginState>(LoginState.Empty)
@@ -32,9 +32,9 @@ class LoginViewModel @Inject constructor(
 
     init {
         _loginState.postValue(LoginState.Loading)
-        if (!userProvider.getToken().isNullOrEmpty()){
+        if (!remoteRepository.isLogged()) {
             _loginState.postValue(LoginState.Success)
-        }else{
+        } else {
             _loginState.postValue(LoginState.Empty)
         }
     }
@@ -55,17 +55,13 @@ class LoginViewModel @Inject constructor(
         }
         val loginRequestDto = LoginRequestDto(login = login, password = password)
         viewModelScope.launch(job) {
-            val response = authApi.login(loginRequestDto)
-            if (response.isSuccessful) {
-                val body = response.body()!!
-                if (body.success) {
-                    userProvider.saveToken(body.token)
-                    _loginState.postValue(LoginState.Success)
-                } else {
-                    _loginState.postValue(LoginState.Error(message = "Incorrect login or password"))
-                }
-            } else {
-                _loginState.postValue(LoginState.Error(message = "Server error"))
+            try {
+                remoteRepository.login(loginRequestDto)
+                _loginState.postValue(LoginState.Success)
+                delay(500L)
+                _loginState.postValue(LoginState.Empty)
+            } catch (e: Exception) {
+                _loginState.postValue(LoginState.Error(e.message.toString()))
             }
         }
     }

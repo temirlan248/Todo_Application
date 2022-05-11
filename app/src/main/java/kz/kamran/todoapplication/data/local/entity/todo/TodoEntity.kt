@@ -3,7 +3,6 @@ package kz.kamran.todoapplication.data.local.entity.todo
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import androidx.room.TypeConverters
 import java.util.*
 
 @Entity(tableName = "todo")

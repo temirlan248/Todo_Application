@@ -14,7 +14,7 @@ fun TodoDto.toTodo() =
         description = description,
         isCompleted = isCompleted,
         category = categoryDto.toCategory(),
-        deadline = Date(deadline * 1000L) // convert millis to date
+        deadline = Date(deadline) // convert millis to date
     )
 
 fun CategoryDto.toCategory() =
@@ -25,11 +25,10 @@ fun CategoryDto.toCategory() =
 
 fun Todo.toUpdateRequestDto() =
     TodoRequestDto(
-        id = id,
         title = title,
         description = description,
         isCompleted = isCompleted,
-        deadline = deadline.time / 1000L,
+        deadline = deadline.time,
         categoryId = category.id
     )
 

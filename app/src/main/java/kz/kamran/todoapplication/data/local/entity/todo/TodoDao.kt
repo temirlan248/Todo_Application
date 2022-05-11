@@ -8,6 +8,9 @@ interface TodoDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(todoEntity: TodoEntity)
 
+    @Update
+    suspend fun update(todoEntity: TodoEntity)
+
     @Delete
     suspend fun delete(todoEntity: TodoEntity)
 

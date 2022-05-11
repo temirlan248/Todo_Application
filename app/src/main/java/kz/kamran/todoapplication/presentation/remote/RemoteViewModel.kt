@@ -9,16 +9,17 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kz.kamran.todoapplication.data.model.Todo
 import kz.kamran.todoapplication.data.remote.RemoteRepository
-import kz.kamran.todoapplication.data.remote.dto.TodoRequestDto
 import kz.kamran.todoapplication.data.remote.mapper.toReversedTodo
 import kz.kamran.todoapplication.data.remote.mapper.toUpdateRequestDto
+import kz.kamran.todoapplication.data.remote.provider.UserProvider
 import kz.kamran.todoapplication.exception.UnauthorizedException
 import kz.kamran.todoapplication.presentation.remote.state.RemoteListState
 import javax.inject.Inject
 
 @HiltViewModel
 class RemoteViewModel @Inject constructor(
-    private val remoteRepository: RemoteRepository
+    private val remoteRepository: RemoteRepository,
+    private val userProvider: UserProvider
 ) : ViewModel() {
 
     private var job = Job()
@@ -35,8 +36,8 @@ class RemoteViewModel @Inject constructor(
     fun cancel() = job.cancel()
 
     fun getTodoList() {
+        _state.postValue(RemoteListState.Loading)
         viewModelScope.launch(job) {
-            _state.postValue(RemoteListState.Loading)
             try {
                 val list = remoteRepository.getTodoList()
                 _state.postValue(RemoteListState.Success(list))
@@ -67,5 +68,7 @@ class RemoteViewModel @Inject constructor(
             }
         }
     }
+
+    fun logout() = userProvider.saveToken(null)
 
 }

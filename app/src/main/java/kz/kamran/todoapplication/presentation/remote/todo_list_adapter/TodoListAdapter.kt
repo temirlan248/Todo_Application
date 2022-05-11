@@ -28,13 +28,14 @@ class TodoListAdapter : RecyclerView.Adapter<TodoViewHolder>() {
             titleTextView.text = todo.title
             descriptionTextView.text = todo.description
             deadlineTextView.text = todo.deadline.toString()
+            isCompletedCheckBox.isChecked = todo.isCompleted
             isCompletedCheckBox.setOnClickListener {
                 if (todo.isCompleted != isCompletedCheckBox.isChecked) {
                     onCompleteClick?.invoke(todo)
                 }
             }
 
-            itemView.setOnClickListener{
+            itemView.setOnClickListener {
                 onItemClick?.invoke(todo)
             }
         }

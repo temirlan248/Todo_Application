@@ -1,4 +1,4 @@
-package kz.kamran.todo_application.data.local
+package kz.kamran.todoapplication.data.local
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

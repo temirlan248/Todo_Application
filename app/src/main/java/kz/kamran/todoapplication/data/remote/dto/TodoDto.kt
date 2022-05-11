@@ -9,7 +9,7 @@ data class TodoDto(
     val title: String,
     @SerializedName("description")
     val description: String,
-    @SerializedName("isCompleted")
+    @SerializedName("is_completed")
     val isCompleted: Boolean,
     @SerializedName("deadline")
     val deadline: Long,

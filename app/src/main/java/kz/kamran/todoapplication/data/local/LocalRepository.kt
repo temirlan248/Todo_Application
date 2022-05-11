@@ -10,5 +10,4 @@ interface LocalRepository {
 
     suspend fun saveTodo(todo: Todo): Boolean
 
-    suspend fun saveCategory(category: Category): Boolean
 }
