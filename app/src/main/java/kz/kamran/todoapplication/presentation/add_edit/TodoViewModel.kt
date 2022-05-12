@@ -13,6 +13,7 @@ import kz.kamran.todoapplication.data.model.Todo
 import kz.kamran.todoapplication.data.remote.RemoteRepository
 import kz.kamran.todoapplication.data.remote.dto.CategoryRequestDto
 import kz.kamran.todoapplication.data.remote.dto.TodoRequestDto
+import kz.kamran.todoapplication.data.remote.dto.TodoUpdateRequestDto
 import kz.kamran.todoapplication.presentation.add_edit.state.TodoState
 import java.util.*
 import javax.inject.Inject
@@ -81,15 +82,28 @@ class TodoViewModel @Inject constructor(
                     }
                     val remoteCategoryId =
                         remoteRepository.getCategoryList().find { it.title == categoryTitle }!!.id
-                    remoteRepository.saveTodo(
-                        TodoRequestDto(
-                            categoryId = remoteCategoryId,
-                            title = title,
-                            description = description,
-                            isCompleted = false,
-                            deadline = calendar.time.time
+                    if (id == 0) {
+                        remoteRepository.saveTodo(
+                            TodoRequestDto(
+                                categoryId = remoteCategoryId,
+                                title = title,
+                                description = description,
+                                isCompleted = false,
+                                deadline = calendar.time.time
+                            )
                         )
-                    )
+                    } else {
+                        remoteRepository.updateTodo(
+                            TodoUpdateRequestDto(
+                                id = id,
+                                categoryId = remoteCategoryId,
+                                title = title,
+                                description = description,
+                                isCompleted = false,
+                                deadline = calendar.time.time
+                            )
+                        )
+                    }
                 }
                 _state.postValue(TodoState.Success)
             } catch (e: Exception) {

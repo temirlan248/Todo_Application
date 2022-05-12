@@ -32,7 +32,7 @@ class LocalRepositoryImpl @Inject constructor(
             categoryDao.insert(category.toCategoryEntity())
         }
         val categoryId = categoryDao.getByTitle(todo.category.title)!!.id
-        todoDao.insert(todo.toTodoEntity(categoryId))
+        todoDao.insert(todo.toTodoEntity(todo.id, categoryId))
         return true
     }
 }
