@@ -52,7 +52,6 @@ class TodoViewModel @Inject constructor(
         isLocal: Boolean,
         id: Int,
     ) {
-
         _state.postValue(TodoState.Loading)
         viewModelScope.launch(job) {
             try {
@@ -63,8 +62,8 @@ class TodoViewModel @Inject constructor(
                 }
 
                 val categoryId =
-                    categoryList.find { categoryTitle.equals(it.title, ignoreCase = true) }?.id
-                        ?: 0
+                    categoryList.find { categoryTitle.equals(it.title, ignoreCase = true) }?.id ?: 0
+
                 if (isLocal) {
                     val category = Category(id = categoryId, title = categoryTitle)
                     val todoEntity = Todo(
